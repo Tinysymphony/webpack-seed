@@ -1,0 +1,12 @@
+node_modules/
+log/
+build/
+prebuild/
+dist/
+npm-debug.log
+.DS_Store
+*.tmp
+*.log
+*.zip
+*.rar
+*.tar
