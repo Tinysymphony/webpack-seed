@@ -44,4 +44,4 @@ Webpack-Seed is a scaffolding tool based on Webpack & Koa & Browser-sync.
 > npm run help
 
 
-<img style="width: 80%;" src="http://7xjgb0.com1.z0.glb.clouddn.com/wy.png"/>
+![](https://github.com/Tinysymphony/webpack-seed/raw/master/wytiny.svg)
