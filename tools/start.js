@@ -7,6 +7,7 @@ import webpackMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 import run from './run';
 import html from './html';
+import MemoryFileSystem from 'memory-fs';
 import webpackConfig from './webpack.config';
 
 const RUN = !process.argv.includes('--no-server'),
@@ -24,29 +25,42 @@ async function start() {
   await new Promise(resolve => {
     const publicPath = webpackConfig.output.publicPath;
     const bundler = webpack(webpackConfig);
+    const memFs = bundler.outputFileSystem = new MemoryFileSystem();
     const wpMiddleware = webpackMiddleware(bundler, {
       publicPath: publicPath,
-      stats: webpackConfig.stats
+      stats: webpackConfig.stats,
+      historyApiFallback: true,
+      host: '127.0.0.1',
+      port: 3000,
+      hot: true,
+      colors: true,
+      quiet: false,
+      headers: { 'Access-Control-Allow-Origin': '*' }
     });
 
     const bs = browserSync.create();
     let doneTimes = 0;
     bundler.plugin('done', (stats) => {
-      const files = Object.keys(stats.compilation.assets);
-      html(files);
+      // const files = Object.keys(stats.compilation.assets);
+      // html(files);
+      // console.log(stats.compilation.assets['../index.html']);
+      // console.log(Object.keys(stats.compilation));
+      const outPath = path.resolve(__dirname, '../prebuild/index.html');
+      const out = memFs.readFileSync(outPath).toString();
+      fs.writeFileSync(outPath, out, 'utf-8');
       if(++doneTimes === 1) {
         bs.init({
-          port: 3000,
           server: {
             baseDir: path.resolve(__dirname, '../prebuild'),
             middleware: [
-              wpMiddleware
-              // webpackHotMiddleware(bundler)
+              wpMiddleware,
+              webpackHotMiddleware(bundler)
             ]
           }
+          // proxy: 'http://localhost:8080',
         }, resolve);
       } else {
-        bs.reload();
+        // bs.reload();
       }
     });
   });

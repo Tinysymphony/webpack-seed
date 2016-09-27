@@ -2,6 +2,7 @@ import path from 'path';
 import webpack from 'webpack';
 import ExtractCssPlugin from 'extract-text-webpack-plugin';
 import AssetsPlugin from 'assets-webpack-plugin';
+import HtmlPlugin from 'html-webpack-plugin';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 import webpackMiddleware from 'webpack-dev-middleware';
 
@@ -18,16 +19,15 @@ const BROWSERS = [
   'Opera >= 12',
   'Safari >= 7.1',
 ];
+const COMMON_CSS = path.resolve(__dirname, '../src/common');
+const HOT = true;
+const HOT_ENTRY = ['webpack/hot/dev-server', 'webpack-hot-middleware/client'];
 
 const config = {
   entry: {
-    index: path.resolve(__dirname, '../src/index.js'),
-    main: path.resolve(__dirname, '../src/main.js')
+    index: [... HOT ? HOT_ENTRY : [], path.resolve(__dirname, '../src/index.js')],
+    main: [... HOT ? HOT_ENTRY : [], path.resolve(__dirname, '../src/main.js')]
   },
-  // [
-  //   // 'webpack-hot-middleware/client',
-  //   path.resolve(__dirname, '../src/index.js')
-  // ],
   output: {
     path: path.resolve(__dirname, `${DIR}/assets`),
     publicPath: '/assets/',
@@ -38,16 +38,37 @@ const config = {
     loaders: [{
       test: /\.(js|jsx)$/,
       exclude: /node_modules/,
-      loader: 'babel'
+      loaders: [
+        'react-hot-loader/webpack',
+        'babel'
+      ]
     }, {
+      // match module css
       test: /\.(css|scss)$/,
-      loader: ExtractCssPlugin.extract('style', 'css!postcss!sass')
+      exclude: COMMON_CSS,
+      // loader: ExtractCssPlugin.extract('style', 'css!postcss!sass')
+      loader: ExtractCssPlugin.extract('style', [
+        'css?modules&localIdentName=[name]--[local]--[hash:base64:5]&sourceMap&importLoaders=1',
+        'postcss?sourceMap=true'
+      ].join('!'))
     }, {
-      test: /\.woff$/,
-      loader: 'url?limit=100000'
+      // match lib css
+      test: /\.(css|scss)$/,
+      include: COMMON_CSS,
+      // loader: ExtractCssPlugin.extract('style', 'css!postcss!sass')
+      loader: ExtractCssPlugin.extract('style', [
+        'css?sourceMap&importLoaders=1',
+        'postcss?sourceMap=true'
+      ].join('!'))
     }, {
-      test: /\.(png|jpg)$/,
-      loader: 'file?name=./img/[name].[ext]'
+      test: /\.(woff|eot|ttf)$/,
+      loader: 'url?limit=100000&name=./fonts/[name].[ext]?[hash:5]'
+    }, {
+      test: /\.(png|jpg|svg|gif|jpeg)$/,
+      loader: 'file?name=./img/[name].[ext]?[hash:5]'
+    }, {
+      test: /\.json$/,
+      loader: 'json'
     }]
   },
   resolve: {
@@ -56,21 +77,31 @@ const config = {
     extensions: EXT
   },
   plugins: [
-    ... DEBUG ? [] : [
+    new ExtractCssPlugin(DEBUG ? 'css/[name].css?[hash]' : 'css/[name].[hash].css', {
+      allChunks: true
+    }),
+    ...DEBUG ? [] : [
       new webpack.optimize.DedupePlugin(),
       new webpack.optimize.UglifyJsPlugin(),
       new webpack.optimize.AggressiveMergingPlugin()
     ],
-    new ExtractCssPlugin(DEBUG ? 'css/[name].css?[hash]' : 'css/[name].[hash].css', {
-      allChunks: true
-    }),
     new AssetsPlugin({
       path: path.resolve(__dirname, `${DIR}/assets`),
       filename: 'assets.json',
       prettyPrint: true
-      // processOutput: x => `module.exports = ${JSON.stringify(x)};`,
+        // processOutput: x => `module.exports = ${JSON.stringify(x)};`,
     }),
-    // new webpack.HotModuleReplacementPlugin(),
+    new HtmlPlugin({
+      template: path.resolve(__dirname, '../src/index.html'),
+      inject: true,
+      hash: true,
+      minify: {
+        removeComments: true,
+        collapseWhitespace: false
+      },
+      filename: path.resolve(__dirname, `${DIR}/index.html`)
+    }),
+    new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin()
   ],
   stats: {
@@ -92,7 +123,9 @@ const config = {
         browsers: BROWSERS
       })
     ]
-  }
+  },
+  // devtool: 'cheap-module-eval-source-map'
+  devtool: 'source-map'
 };
 
 export default config;

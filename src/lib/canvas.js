@@ -1,5 +1,4 @@
-var TINY = 'wytiny',
-  singlePiece = false,
+var singlePiece = false,
   redrawFlag = true,
   pieceState = 0,
   target = {
@@ -7,7 +6,7 @@ var TINY = 'wytiny',
     y: NaN
   },
   randomMap = {},
-  times = 0;
+  times = 0,
   requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
 
 const drawCanvas = () => {
@@ -28,10 +27,10 @@ const drawCanvas = () => {
       width: 4,
       height: 4
     },
-    bigSize = {
-      width: 10,
-      height: 10
-    },
+    // bigSize = {
+    //   width: 10,
+    //   height: 10
+    // },
     numX, numY, pointSize;
   if(!singlePiece) {
     target.x = Math.floor(Math.random() * (width - initPos.x) / space.x) * space.x + initPos.x,
@@ -73,13 +72,11 @@ const drawCanvas = () => {
 
   times++;
   times %= 10000;
-  // console.log(times, redrawFlag);
   if(times % 1200 === 0){
     redrawFlag = true;
-    // console.log(redrawFlag);
   }
   requestAnimationFrame(drawCanvas);
-}
+};
 
 export default function () {
   window.onload = function () {

@@ -9,12 +9,10 @@ const ejsFile = path.resolve(__dirname, '../src/index.ejs');
 const htmlFile = path.resolve(__dirname, `${DIR}/index.html`);
 
 function html(files) {
-  console.log(files);
   const scripts = files.filter(file => /\.js$/.test(file) || /\.js\?/.test(file));
   const styles = files.filter(file => /\.css$/.test(file) || /\.css\?/.test(file));
   const template = fs.readFileSync(ejsFile, 'utf8');
   const render = ejs.compile(template, { filename: ejsFile });
-  console.log(scripts);
   const output = render({
     styles: styles,
     scripts: scripts,
