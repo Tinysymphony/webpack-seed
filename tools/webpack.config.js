@@ -5,8 +5,11 @@ import AssetsPlugin from 'assets-webpack-plugin';
 import HtmlPlugin from 'html-webpack-plugin';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 import webpackMiddleware from 'webpack-dev-middleware';
+import pkg from '../package.json';
 
 const DEBUG = !process.argv.includes('--release');
+const HMR = !process.argv.includes('--no-hmr');
+
 const DIR = DEBUG ? '../prebuild' : '../build';
 const EXT = ['', '.js', '.jsx', '.woff', '.png', '.jpg', '.scss', '.css'];
 const BROWSERS = [
@@ -21,7 +24,26 @@ const BROWSERS = [
 ];
 const COMMON_CSS = path.resolve(__dirname, '../src/common');
 const HOT = true;
-const HOT_ENTRY = ['webpack/hot/dev-server', 'webpack-hot-middleware/client'];
+// const HOT_ENTRY = ['webpack/hot/dev-server', 'webpack-hot-middleware/client'];
+const HOT_ENTRY = ['react-hot-loader/patch', 'webpack-hot-middleware/client'];
+
+const babelConfig = Object.assign({}, pkg.babel, {
+  babelrc: false,
+  cacheDirectory: HMR,
+});
+if(HMR) babelConfig.plugins.unshift('react-hot-loader/babel');
+
+const devServer = {
+    contentBase: __dirname + `${DIR}`,
+    colors: true,
+    quiet: false,
+    noInfo: false,
+    publicPath: '/assets/',
+    historyApiFallback: true,
+    host: '127.0.0.1',
+    port: 8000,
+    hot: true
+};
 
 const config = {
   entry: {
@@ -34,32 +56,44 @@ const config = {
     filename: DEBUG ? 'js/[name].js?[hash]' : 'js/[name].[hash].js',
     chunkFilename: DEBUG ? 'js/[id].js?[chunkhash]' : 'js/[id].[chunkhash].js'
   },
+  // devServer: devServer,
   module: {
     loaders: [{
       test: /\.(js|jsx)$/,
       exclude: /node_modules/,
       loaders: [
-        'react-hot-loader/webpack',
-        'babel'
+        // 'react-hot',
+        // 'babel'
+        `babel?${JSON.stringify(babelConfig)}`
       ]
     }, {
       // match module css
       test: /\.(css|scss)$/,
       exclude: COMMON_CSS,
       // loader: ExtractCssPlugin.extract('style', 'css!postcss!sass')
-      loader: ExtractCssPlugin.extract('style', [
+      // loader: ExtractCssPlugin.extract('style', [
+      //   'css?modules&localIdentName=[name]--[local]--[hash:base64:5]&sourceMap&importLoaders=1',
+      //   'postcss?sourceMap=true'
+      // ].join('!'))
+      loaders: [
+        'style',
         'css?modules&localIdentName=[name]--[local]--[hash:base64:5]&sourceMap&importLoaders=1',
         'postcss?sourceMap=true'
-      ].join('!'))
+      ]
     }, {
       // match lib css
       test: /\.(css|scss)$/,
       include: COMMON_CSS,
       // loader: ExtractCssPlugin.extract('style', 'css!postcss!sass')
-      loader: ExtractCssPlugin.extract('style', [
+      // loader: ExtractCssPlugin.extract('style', [
+      //   'css?sourceMap&importLoaders=1',
+      //   'postcss?sourceMap=true'
+      // ].join('!'))
+      loaders: [
+        'style',
         'css?sourceMap&importLoaders=1',
         'postcss?sourceMap=true'
-      ].join('!'))
+      ]
     }, {
       test: /\.(woff|eot|ttf)$/,
       loader: 'url?limit=100000&name=./fonts/[name].[ext]?[hash:5]'

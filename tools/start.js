@@ -29,13 +29,11 @@ async function start() {
     const wpMiddleware = webpackMiddleware(bundler, {
       publicPath: publicPath,
       stats: webpackConfig.stats,
-      historyApiFallback: true,
-      host: '127.0.0.1',
-      port: 3000,
+      // historyApiFallback: true,
+      // host: '127.0.0.1',
+      // port: 3000,
       hot: true,
-      colors: true,
-      quiet: false,
-      headers: { 'Access-Control-Allow-Origin': '*' }
+      // headers: { 'Access-Control-Allow-Origin': '*' }
     });
 
     const bs = browserSync.create();
@@ -54,7 +52,8 @@ async function start() {
             baseDir: path.resolve(__dirname, '../prebuild'),
             middleware: [
               wpMiddleware,
-              webpackHotMiddleware(bundler)
+              webpackHotMiddleware(bundler),
+              require('connect-history-api-fallback')(),
             ]
           }
           // proxy: 'http://localhost:8080',
