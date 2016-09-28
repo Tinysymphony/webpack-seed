@@ -5,12 +5,11 @@
   "main": "index.js",
   "scripts": {
     "start": "babel-node tools/run start",
-    "pub": "babel-node tools/run start --no-server --release",
+    "pub": "babel-node tools/run start --no-server --release --no-hmr",
     "build": "gulp build",
     "deploy": "gulp deploy",
     "clean": "babel-node tools/run clean",
-    "webpack": "babel-node tools/run start --no-server",
-    "server": "babel-node server",
+    "webpack": "babel-node tools/run start --no-server --no-hmr",
     "lint": "eslint src",
     "koa": "babel-node server/koa"
   },

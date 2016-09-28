@@ -28,12 +28,7 @@ async function start() {
     const memFs = bundler.outputFileSystem = new MemoryFileSystem();
     const wpMiddleware = webpackMiddleware(bundler, {
       publicPath: publicPath,
-      stats: webpackConfig.stats,
-      // historyApiFallback: true,
-      // host: '127.0.0.1',
-      // port: 3000,
-      hot: true,
-      // headers: { 'Access-Control-Allow-Origin': '*' }
+      stats: webpackConfig.stats
     });
 
     const bs = browserSync.create();
@@ -41,8 +36,6 @@ async function start() {
     bundler.plugin('done', (stats) => {
       // const files = Object.keys(stats.compilation.assets);
       // html(files);
-      // console.log(stats.compilation.assets['../index.html']);
-      // console.log(Object.keys(stats.compilation));
       const outPath = path.resolve(__dirname, '../prebuild/index.html');
       const out = memFs.readFileSync(outPath).toString();
       fs.writeFileSync(outPath, out, 'utf-8');
@@ -53,13 +46,9 @@ async function start() {
             middleware: [
               wpMiddleware,
               webpackHotMiddleware(bundler),
-              require('connect-history-api-fallback')(),
             ]
           }
-          // proxy: 'http://localhost:8080',
         }, resolve);
-      } else {
-        // bs.reload();
       }
     });
   });

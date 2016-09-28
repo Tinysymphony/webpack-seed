@@ -1,0 +1,71 @@
+.pImg {
+  display: inline-block;
+  margin: 50px 50px 0px 50px;
+  width: 200px;
+}
+
+.text {
+  margin: 180px 100px 40px 100px;
+  color: #2bb8aa;
+  font-size: 2em;
+  line-height: 2em;
+  vertical-align: -5px;
+}
+
+.text::before {
+  content: '[';
+  font-size: 2em;
+  vertical-align: -8px;
+  margin: 40px;
+  transition: .5s ease;
+}
+
+.text::after {
+  content: ']';
+  font-size: 2em;
+  vertical-align: -8px;
+  margin: 40px;
+  transition: .5s ease;
+}
+
+.text:hover::after, .text:hover::before {
+  margin: 50px;
+  color: #ffee00;
+}
+
+.text:hover .bind{
+  background: #ffee00;
+}
+
+.bind {
+  position: relative;
+  display: inline-block;
+  height: 10px;
+  width: 10px;
+  background: #2bb8aa;
+  margin: 0px 40px;
+  vertical-align: 7px;
+  transition: .5s ease;
+}
+
+.bind::after {
+  content: '';
+  position: absolute;
+  left: -600%;
+  top: 450%;
+  width: 700%;
+  height: 1px;
+  background: #2bb8aa;
+  transform: rotate(-55deg);
+}
+
+.bind::before {
+  content: '';
+  position: absolute;
+  left: 0%;
+  top: -380%;
+  width: 700%;
+  height: 1px;
+  background: #2bb8aa;
+  transform: rotate(-55deg);
+}

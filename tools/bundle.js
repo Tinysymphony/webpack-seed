@@ -8,8 +8,10 @@ const bundle = () => new Promise((resolve, reject) => {
       console.log(`[${new Date()}] Create Bundle Failed. Error: ${err.stack}`);
       return reject(err);
     }
-    // const files = Object.keys(stats.compilation.assets);
-    // html(files);
+    const files = Object.keys(stats.compilation.assets);
+    html(files);
+
+    console.log(stats.compilation.options.module);
     console.log(stats.toString(config.stats));
     return resolve();
   });

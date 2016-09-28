@@ -43,5 +43,8 @@ Webpack-Seed is a scaffolding tool based on Webpack & Koa & Browser-sync.
 
 > npm run help
 
+#### Update info
+
+* 2016.9.28 Init-version
 
 ![](http://7xjgb0.com1.z0.glb.clouddn.com/log.png)

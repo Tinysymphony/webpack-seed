@@ -1,9 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import WytinyImages from 'components/wytinyImages';
-import imgs from 'datas/imgs';
+import TinyHtml from '@components/TinyHtml';
+import Data from 'datas/data';
 
 ReactDOM.render(
-  <WytinyImages data={imgs}/>,
+  <TinyHtml {...Data}/>,
   document.getElementById('react-app')
 );
+
+if (module.hot) {
+  module.hot.accept();
+}

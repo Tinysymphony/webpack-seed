@@ -11,7 +11,7 @@ const DEBUG = !process.argv.includes('--release');
 const HMR = !process.argv.includes('--no-hmr');
 
 const DIR = DEBUG ? '../prebuild' : '../build';
-const EXT = ['', '.js', '.jsx', '.woff', '.png', '.jpg', '.scss', '.css'];
+const EXT = ['', '.js', '.jsx', '.web.js', '.woff', '.png', '.jpg', '.scss', '.css', '.json'];
 const BROWSERS = [
   'Android 2.3',
   'Android >= 4',
@@ -22,33 +22,31 @@ const BROWSERS = [
   'Opera >= 12',
   'Safari >= 7.1',
 ];
+
 const COMMON_CSS = path.resolve(__dirname, '../src/common');
-const HOT = true;
-// const HOT_ENTRY = ['webpack/hot/dev-server', 'webpack-hot-middleware/client'];
+const CSS_CONF = (isModule) => [
+  `css?${JSON.stringify({
+    sourceMap: DEBUG,
+    modules: isModule,
+    localIdentName: DEBUG ? '[name]--[local]--[hash:base64:3]' : '[hash:base64:6]',
+    minimize: !DEBUG,
+    importLoaders: 1
+  })}`,
+  `postcss${DEBUG ? '?sourceMap=true' : ''}`
+];
+
 const HOT_ENTRY = ['react-hot-loader/patch', 'webpack-hot-middleware/client'];
 
 const babelConfig = Object.assign({}, pkg.babel, {
   babelrc: false,
   cacheDirectory: HMR,
 });
-if(HMR) babelConfig.plugins.unshift('react-hot-loader/babel');
-
-const devServer = {
-    contentBase: __dirname + `${DIR}`,
-    colors: true,
-    quiet: false,
-    noInfo: false,
-    publicPath: '/assets/',
-    historyApiFallback: true,
-    host: '127.0.0.1',
-    port: 8000,
-    hot: true
-};
+if (HMR) babelConfig.plugins.unshift('react-hot-loader/babel');
 
 const config = {
   entry: {
-    index: [... HOT ? HOT_ENTRY : [], path.resolve(__dirname, '../src/index.js')],
-    main: [... HOT ? HOT_ENTRY : [], path.resolve(__dirname, '../src/main.js')]
+    index: [...HMR ? HOT_ENTRY : [], path.resolve(__dirname, '../src/index.js')],
+    main: [...HMR ? HOT_ENTRY : [], path.resolve(__dirname, '../src/main.js')]
   },
   output: {
     path: path.resolve(__dirname, `${DIR}/assets`),
@@ -56,50 +54,31 @@ const config = {
     filename: DEBUG ? 'js/[name].js?[hash]' : 'js/[name].[hash].js',
     chunkFilename: DEBUG ? 'js/[id].js?[chunkhash]' : 'js/[id].[chunkhash].js'
   },
-  // devServer: devServer,
   module: {
     loaders: [{
       test: /\.(js|jsx)$/,
       exclude: /node_modules/,
       loaders: [
-        // 'react-hot',
-        // 'babel'
         `babel?${JSON.stringify(babelConfig)}`
       ]
     }, {
       // match module css
       test: /\.(css|scss)$/,
       exclude: COMMON_CSS,
-      // loader: ExtractCssPlugin.extract('style', 'css!postcss!sass')
-      // loader: ExtractCssPlugin.extract('style', [
-      //   'css?modules&localIdentName=[name]--[local]--[hash:base64:5]&sourceMap&importLoaders=1',
-      //   'postcss?sourceMap=true'
-      // ].join('!'))
-      loaders: [
-        'style',
-        'css?modules&localIdentName=[name]--[local]--[hash:base64:5]&sourceMap&importLoaders=1',
-        'postcss?sourceMap=true'
-      ]
+      loader: DEBUG ? '' : ExtractCssPlugin.extract('style', CSS_CONF(true).join('!')),
+      loaders: DEBUG ? ['style'].concat(CSS_CONF(true)) : []
     }, {
       // match lib css
       test: /\.(css|scss)$/,
       include: COMMON_CSS,
-      // loader: ExtractCssPlugin.extract('style', 'css!postcss!sass')
-      // loader: ExtractCssPlugin.extract('style', [
-      //   'css?sourceMap&importLoaders=1',
-      //   'postcss?sourceMap=true'
-      // ].join('!'))
-      loaders: [
-        'style',
-        'css?sourceMap&importLoaders=1',
-        'postcss?sourceMap=true'
-      ]
+      loader: DEBUG ? '' : ExtractCssPlugin.extract('style', CSS_CONF(false).join('!')),
+      loaders: DEBUG ? ['style'].concat(CSS_CONF(false)) : []
     }, {
       test: /\.(woff|eot|ttf)$/,
-      loader: 'url?limit=100000&name=./fonts/[name].[ext]?[hash:5]'
+      loader: 'url?limit=100000&name=fonts/[name].[ext]?[hash:5]'
     }, {
       test: /\.(png|jpg|svg|gif|jpeg)$/,
-      loader: 'file?name=./img/[name].[ext]?[hash:5]'
+      loader: 'file?name=img/[name].[ext]?[hash:5]'
     }, {
       test: /\.json$/,
       loader: 'json'
@@ -107,7 +86,13 @@ const config = {
   },
   resolve: {
     root: path.resolve(__dirname, '../src'),
-    modulesDirectories: ['node_modules'],
+    alias: {
+      '@components': 'components'
+    },
+    modulesDirectories: ['node_modules', 'components'],
+    // directoryDescriptionFiles: {
+    //   "package.json": true
+    // },
     extensions: EXT
   },
   plugins: [
@@ -123,7 +108,6 @@ const config = {
       path: path.resolve(__dirname, `${DIR}/assets`),
       filename: 'assets.json',
       prettyPrint: true
-        // processOutput: x => `module.exports = ${JSON.stringify(x)};`,
     }),
     new HtmlPlugin({
       template: path.resolve(__dirname, '../src/index.html'),
@@ -143,15 +127,13 @@ const config = {
     timings: true,
     chunks: false
   },
-  // watchOptions: {
-  //   aggregateTimeout: 300,
-  //   poll: true
-  // },
   lazy: false,
   noInfo: false,
   postcss: function(bundle) {
     return [
-      require('postcss-import')(),
+      require('postcss-import')({
+        addDependencyTo: bundle
+      }),
       require('pleeease-filters')(),
       require('autoprefixer')({
         browsers: BROWSERS
@@ -159,7 +141,7 @@ const config = {
     ]
   },
   // devtool: 'cheap-module-eval-source-map'
-  devtool: 'source-map'
+  devtool: DEBUG ? 'source-map' : false
 };
 
 export default config;

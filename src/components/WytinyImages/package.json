@@ -1,0 +1,15 @@
+{
+  "name": "WytinyImages",
+  "version": "0.0.1",
+  "author": {
+    "name": "wytiny",
+    "url": "http://wytiny.com"
+  },
+  "maintainers": [{
+    "name": "wytiny",
+    "email": "zjutiny@gmail.com"
+  }],
+  "private": true,
+  "main": "WytinyImages.jsx",
+  "license": "MIT"
+}
