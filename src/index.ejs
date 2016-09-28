@@ -11,33 +11,8 @@
     <% } %>
   </head>
   <body>
-    <div type="button" class="btn no-select">
-      <div class="btn-full no-select">
-
-      </div>
-      <div class="btn-content no-select">
-        Cont
-      </div>
-    </div>
-
-    <div class="text">
-      WY<div class="bind"></div>TINY
-    </div>
-
     <div class="ground"></div>
-
-    <div class="plane"></div>
-
-    <div id="react-app">
-
-    </div>
-    <!-- <img class="p-img" src="./img/wytiny-small.svg" alt="" />
-    <img class="p-img" src="./img/wytiny.min.svg" alt="" />
-    <img class="p-img" src="./img/wytiny-blue-paper.svg" alt="" />
-    <img class="p-img" src="./img/wytiny-orange-paper.svg" alt="" />
-    <img class="p-img" src="./img/wytiny-python.svg" alt="" />
-    <img class="p-img" src="./img/wytiny-mt.svg" alt="" /> -->
-
+    <div id="react-app"></div>
     <canvas id="canvas" width="100" height="100"></canvas>
     <% for(var i = 0; i < scripts.length; i++) { %>
       <script src="<%= publicPath %><%= scripts[i] %>" charset="utf-8"></script>

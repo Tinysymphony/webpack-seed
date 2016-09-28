@@ -82,8 +82,4 @@ export default function () {
   window.onload = function () {
     requestAnimationFrame(drawCanvas);
   };
-
-  window.onresize = function () {
-    requestAnimationFrame(drawCanvas);
-  };
 }

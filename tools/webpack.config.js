@@ -4,11 +4,11 @@ import ExtractCssPlugin from 'extract-text-webpack-plugin';
 import AssetsPlugin from 'assets-webpack-plugin';
 import HtmlPlugin from 'html-webpack-plugin';
 import webpackHotMiddleware from 'webpack-hot-middleware';
-import webpackMiddleware from 'webpack-dev-middleware';
 import pkg from '../package.json';
 
-const DEBUG = !process.argv.includes('--release');
-const HMR = !process.argv.includes('--no-hmr');
+const DEBUG = !process.argv.includes('--release'),
+  HMR = !process.argv.includes('--no-hmr'),
+  EXTRACT = process.argv.includes('--no-server');
 
 const DIR = DEBUG ? '../prebuild' : '../build';
 const EXT = ['', '.js', '.jsx', '.web.js', '.woff', '.png', '.jpg', '.scss', '.css', '.json'];
@@ -65,14 +65,14 @@ const config = {
       // match module css
       test: /\.(css|scss)$/,
       exclude: COMMON_CSS,
-      loader: DEBUG ? '' : ExtractCssPlugin.extract('style', CSS_CONF(true).join('!')),
-      loaders: DEBUG ? ['style'].concat(CSS_CONF(true)) : []
+      loader: EXTRACT ? '' : ExtractCssPlugin.extract('style', CSS_CONF(true).join('!')),
+      loaders: EXTRACT ? ['style'].concat(CSS_CONF(true)) : []
     }, {
       // match lib css
       test: /\.(css|scss)$/,
       include: COMMON_CSS,
-      loader: DEBUG ? '' : ExtractCssPlugin.extract('style', CSS_CONF(false).join('!')),
-      loaders: DEBUG ? ['style'].concat(CSS_CONF(false)) : []
+      loader: EXTRACT ? '' : ExtractCssPlugin.extract('style', CSS_CONF(false).join('!')),
+      loaders: EXTRACT ? ['style'].concat(CSS_CONF(false)) : []
     }, {
       test: /\.(woff|eot|ttf)$/,
       loader: 'url?limit=100000&name=fonts/[name].[ext]?[hash:5]'

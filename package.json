@@ -9,7 +9,7 @@
     "build": "gulp build",
     "deploy": "gulp deploy",
     "clean": "babel-node tools/run clean",
-    "webpack": "babel-node tools/run start --no-server --no-hmr",
+    "bundle": "babel-node tools/run start --no-server --no-hmr",
     "lint": "eslint src",
     "koa": "babel-node server/koa"
   },

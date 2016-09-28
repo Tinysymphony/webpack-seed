@@ -1,25 +1,36 @@
 .header {
   position: fixed;
   top: 0;
-  width: 100vw;
+  width: 100%;
   height: 80px;
-  background: rgba(29, 33, 32, .9);
+  background: rgba(29, 33, 32, .7);
   box-shadow: 0 2px 8px 0 rgba(0,0,0,0.37);
-  padding: 0 40px;
   text-align: left;
 }
 
 .list {
   line-height: 80px;
+  position: absolute;
+  right: 0;
+  margin: 0 50px;
 }
 
 .item {
   list-style-type: none;
   float: left;
-  margin-right: 30px;
+  cursor: pointer;
+  padding: 0 20px;
+  border-bottom: 2px solid transparent;
+  transition: .3s ease;
+}
+
+.item:hover {
+  border-bottom-color: white;
+  background-color: rgba(29, 33, 32, 1);
 }
 
 .item a {
+  display: block;
   color: white;
   font-size: 1.2em;
 }
