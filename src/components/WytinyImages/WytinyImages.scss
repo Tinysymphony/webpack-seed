@@ -69,3 +69,30 @@
   background: #2bb8aa;
   transform: rotate(-55deg);
 }
+
+@media (max-width: 680px) {
+  .text:hover::after, .text:hover::before {
+    margin: 40px;
+  }
+}
+
+@media (max-width: 600px) {
+  .text::after, .text::before {
+    display: none;
+  }
+}
+
+@media (max-width: 440px) {
+  .text {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+
+  .pImg {
+    display: block;
+    width: 45vw;
+    width: 45%;
+    margin: 12% auto auto;
+  }
+}

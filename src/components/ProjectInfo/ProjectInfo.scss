@@ -9,3 +9,175 @@
   border-right: 4px solid #ff9900;
   color: #222;
 }
+
+.btn {
+  display: inline-block;
+  position: relative;
+  border: 1px solid #eee;
+  color: white;
+  height: 80px;
+  width: 180px;
+  background: transparent;
+  font-size: 2em;
+  margin: 100px;
+  cursor: pointer;
+}
+
+.btn:hover .btn-full::after, .btn:hover .btn-full::before, .btn:hover::after, .btn:hover::before  {
+  background-color: #ffcc00;
+}
+
+.btn:hover {
+  border-color: #ffcc00;
+}
+
+.btn:hover .btn-content{
+  color: #ffcc00;
+}
+
+.btn .btn-full, .btn .btn-content {
+  position: absolute;
+  left: 0;
+  color: white;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  line-height: 80px;
+  text-shadow: 4px 3px 0 rgba(0,0,0,0.15);
+}
+
+.btn::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 3px;
+  background-color: #EEE;
+  animation: run-top 3s infinite ease;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 0;
+  height: 3px;
+  background-color: #EEE;
+  animation: run-bottom 3s infinite ease;
+}
+
+.btn-full::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 3px;
+  height: 0;
+  background-color: #EEE;
+  animation: run-left 3s infinite ease;
+}
+
+.btn-full::before {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 3px;
+  height: 0;
+  background-color: #EEE;
+  animation: run-right 3s infinite ease;
+}
+
+
+@keyframes run-top {
+  0% {
+    left: 0;
+    width: 0;
+  }
+  50% {
+    left: 0;
+    width: 100%;
+  }
+  100% {
+    left: 100%;
+    width: 0;
+  }
+}
+
+@keyframes run-bottom {
+  0% {
+    right: 0;
+    width: 0;
+  }
+  50% {
+    right: 0;
+    width: 100%;
+  }
+  100% {
+    right: 100%;
+    width: 0;
+  }
+}
+
+@keyframes run-right {
+  0% {
+    top: 0;
+    height: 0;
+  }
+  50% {
+    top: 0;
+    height: 100%;
+  }
+  100% {
+    top: 100%;
+    height: 0;
+  }
+}
+
+@keyframes run-left {
+  0% {
+    bottom: 0;
+    height: 0;
+  }
+  50% {
+    bottom: 0;
+    height: 100%;
+  }
+  100% {
+    bottom: 100%;
+    height: 0;
+  }
+}
+
+.ground {
+  display: inline-block;
+  position: fixed;
+  left: 100px;
+  top: 100px;
+  border-radius: 50%;
+  height: 50px;
+  width: 50px;
+  background: white;
+  animation: great 1.2s ease-in-out;
+  transform: scale(0);
+}
+
+@keyframes great {
+  100% {
+    transform: scale(200);
+    opacity: 0;
+  }
+}
+
+@media (max-width: 300px) {
+  .info {
+    padding: 10px;
+    font-size: .6em;
+  }
+}
+
+@media (max-width: 500px) {
+
+}

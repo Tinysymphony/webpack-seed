@@ -1,7 +1,17 @@
 .footer {
-  height: 90px;
-  width: 100vw;
-  color: #999;
-  line-height: 90px;
-  background-color: #222;
+    height: 90px;
+    width: 100vw;
+    color: #999;
+    line-height: 90px;
+    background-color: #222;
+    font-size: 0.8em;
+}
+@media (max-width: 400px) {
+    .footer {
+        font-size: 0.5em;
+        overflow: hidden;
+        white-space: nowrap;
+        word-break: break-all;
+        word-wrap: normal;
+    }
 }
