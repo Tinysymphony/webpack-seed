@@ -65,14 +65,14 @@ const config = {
       // match module css
       test: /\.(css|scss)$/,
       exclude: COMMON_CSS,
-      loader: EXTRACT ? '' : ExtractCssPlugin.extract('style', CSS_CONF(true).join('!')),
-      loaders: EXTRACT ? ['style'].concat(CSS_CONF(true)) : []
+      loader: EXTRACT ? ExtractCssPlugin.extract('style', CSS_CONF(true).join('!')) : '',
+      loaders: EXTRACT ? [] : ['style'].concat(CSS_CONF(true))
     }, {
       // match lib css
       test: /\.(css|scss)$/,
       include: COMMON_CSS,
-      loader: EXTRACT ? '' : ExtractCssPlugin.extract('style', CSS_CONF(false).join('!')),
-      loaders: EXTRACT ? ['style'].concat(CSS_CONF(false)) : []
+      loader: EXTRACT ? ExtractCssPlugin.extract('style', CSS_CONF(false).join('!')) : '',
+      loaders: EXTRACT ? [] : ['style'].concat(CSS_CONF(false))
     }, {
       test: /\.(woff|eot|ttf)$/,
       loader: 'url?limit=100000&name=fonts/[name].[ext]?[hash:5]'
