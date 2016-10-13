@@ -13,6 +13,6 @@ const headerList = [{
   url: 'https://github.com/Tinysymphony'
 }];
 
-const info = `Front-end scaffolding tool Based on Webpack / Browser-sync / Babel.`;
+const info = 'Front-end scaffolding tool Based on Webpack / Browser-sync / Babel.';
 
 export default {imgs, headerList, info};

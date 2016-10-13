@@ -4,7 +4,7 @@ import s from './Footer.scss';
 class Footer extends Component {
   render () {
     return (
-      <div className={s.footer}>Copyright (c) 2016 Copyright Holder All Rights Reserved.</div>      
+      <div className={s.footer}>Copyright (c) 2016 Copyright Holder All Rights Reserved.</div>
     );
   }
 }

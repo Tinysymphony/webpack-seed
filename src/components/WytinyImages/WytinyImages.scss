@@ -1,3 +1,5 @@
+@import "../../common/color.scss";
+
 .pImg {
   display: inline-block;
   margin: 50px 50px 0px 50px;
@@ -6,7 +8,7 @@
 
 .text {
   margin: 180px 100px 40px 100px;
-  color: #2bb8aa;
+  color: $MTColor;
   font-size: 2em;
   line-height: 2em;
   vertical-align: -5px;
@@ -42,7 +44,7 @@
   display: inline-block;
   height: 10px;
   width: 10px;
-  background: #2bb8aa;
+  background: $MTColor;
   margin: 0px 40px;
   vertical-align: 7px;
   transition: .5s ease;
@@ -55,7 +57,7 @@
   top: 450%;
   width: 700%;
   height: 1px;
-  background: #2bb8aa;
+  background: $MTColor;
   transform: rotate(-55deg);
 }
 
@@ -66,7 +68,7 @@
   top: -380%;
   width: 700%;
   height: 1px;
-  background: #2bb8aa;
+  background: $MTColor;
   transform: rotate(-55deg);
 }
 

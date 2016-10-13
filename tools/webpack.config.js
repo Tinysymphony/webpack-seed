@@ -137,7 +137,8 @@ const config = {
       require('pleeease-filters')(),
       require('autoprefixer')({
         browsers: BROWSERS
-      })
+      }),
+      require('precss')()
     ]
   },
   // devtool: 'cheap-module-eval-source-map'
